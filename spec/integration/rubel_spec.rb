@@ -54,18 +54,19 @@ describe do
       execute("MAP([5.124], round(SUM(1)))").should == 5.1
     end
 
-    # Disabled block support. looks cool, but does not work
-    # with method_missing, etc. So rather confusing.
-    #
-    # it "should execute as do SUM(1,2,3) end" do
-    #   execute do 
-    #     SUM(1,2,3)
-    #   end.should == 6
-    # end
-    #
-    # it "should execute as { SUM(1,2,3) }" do
-    #   execute{SUM(1,2,3)}.should == 6
-    # end
+    pending do
+      # Disabled block support. looks cool, but does not work
+      # with method_missing, etc. So rather confusing.
+      it "should execute as do SUM(1,2,3) end" do
+        execute do 
+          SUM(1,2,3)
+        end.should == 6
+      end
+      
+      it "should execute as { SUM(1,2,3) }" do
+        execute{SUM(1,2,3)}.should == 6
+      end
+    end
   end
 
   context "sandbox" do

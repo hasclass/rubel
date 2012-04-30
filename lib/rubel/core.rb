@@ -1,15 +1,14 @@
 module Rubel
   module Core
-    # query - The String or Proc to be executed
-    def execute(query = nil)
-
-      if query.is_a?(::String)
-        query = sanitized_proc(query)
+    # q - The String or Proc to be executed
+    def execute(q = nil)
+      if q.is_a?(::String)
+        q = sanitized_proc(q)
       end
       
-      instance_exec(&query)
-    #rescue => e
-    #  ::Rubel::ErrorReporter.new(e, query)
+      instance_exec(&q)
+    rescue => e
+      ::Rubel::ErrorReporter.new(e, q)
     end
     alias query execute
 
@@ -18,20 +17,22 @@ module Rubel
     # It removes "::"  from the string to prevent people to access 
     # classes outside Runtime::Sandbox
     #  
-    #
     def sanitize!(string)
       string.gsub!('::', '')
     end
 
-    # Sanitize a string from Ruby injection.
-    # 
-    # It removes "::"  from the string to prevent people to access 
-    # classes outside Runtime::Sandbox
-    #  
+    # Sanitizes a string from Ruby injection and *instance_eval*s it into a lambda.
+    # This is used internally by #execute
+    #
+    # If you execute lots of queries it is recommended to memoize the
+    # results somewhere in your application. 
+    #
+    # The sanitation removes "::"  from the string to prevent people to access 
+    # classes outside Runtime::Sandbox. This has no effect in other runtimes.
     #
     def sanitized_proc(string)
       sanitize!(string)
-      eval("lambda { #{string} }")
+      instance_eval("lambda { #{string} }")
     end
 
     # Returns method name as a Symbol if args are empty 
