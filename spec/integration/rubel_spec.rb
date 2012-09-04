@@ -92,6 +92,14 @@ describe do
     it "should return symbols for method_missing" do
       @sandbox.execute(-> { foo }).should == :foo
     end
+
+    it "should return Messages for method_missing with args" do
+      message = @sandbox.execute(-> { foo(bar, baz, 42) })
+
+      message.should be_kind_of(Rubel::Message)
+      message.name.should eql(:foo)
+      message.arguments.should eql([:bar, :baz, 42])
+    end
   end
 
 

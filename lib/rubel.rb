@@ -1,5 +1,6 @@
 require_relative 'rubel/version'
 require_relative 'rubel/core'
+require_relative 'rubel/message'
 require_relative 'rubel/error_reporter'
 require_relative 'rubel/runtime/sandbox'
 require_relative 'rubel/runtime/console'
